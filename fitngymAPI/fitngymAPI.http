@@ -1,0 +1,6 @@
+@fitngymAPI_HostAddress = http://localhost:5137
+
+GET {{fitngymAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
