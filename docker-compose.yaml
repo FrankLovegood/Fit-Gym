@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+  mydotnetapi:
+    build:
+      context: ./MyDotNetApi
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"   # Puerto de la API
+    environment:
+      
+      # Variables de entorno de la API
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=FitGymDb;User Id=tu_usuario;Password=test04;Integrated Security=true
+    depends_on:
+      - sqlserver
+
+  djangomicroservice:
+    build:
+      context: ./DjangoMicroservice
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      # Otras variables de entorno de Django según sea necesario
+    depends_on:
+      - sqlserver
+
+  sqlserver:
+    # Imagen de SQL Server (para Windows Authentication, si usamos Windows Containers)
+    
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+    
+      SA_PASSWORD: "Test04"  # Contraseña del usuario SA
+      ACCEPT_EULA: "Y"
+    
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:
